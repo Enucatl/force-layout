@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style>
-
-.node {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
-
-.link {
-  fill: none;
-  stroke: #bbb;
-}
-
-</style>
+<head>
+<link rel="stylesheet" type="text/css" href="graph.css" media="all">
+</head>
 <body>
+    <div id="bezier_graph"> </div>
+
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="js/force-layout.js"></script>
-<script>
-    d3.chart.force_bezier();
+<script type="text/javascript">
+    var force_bezier = d3.chart.force_bezier();
+    d3.json("miserables.json", function(error, data) {
+        d3.select("#bezier_graph")
+            .data([data])
+            .call(force_bezier);
+    });
 </script>
+</body>

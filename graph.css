@@ -1,0 +1,17 @@
+.node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+
+.link {
+    fill: none;
+    stroke: #bbb;
+}
+
+.lemon {
+    stroke-width: 1;
+}
+
+.broom {
+    stroke-width: 2;
+}
