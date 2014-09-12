@@ -30,23 +30,4 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="js/force-layout.js"></script>
     <script src="js/main.js"></script>
-    <script type="text/javascript">
-        var force_bezier = d3.chart.force_bezier();
-
-        var class_scale = d3.scale.ordinal()
-            .domain(["natural", "moral"])
-            .range(["#a1d99b", "#aec7e8"]);
-
-        var gender_scale = d3.scale.ordinal()
-            .domain(["m", "f"])
-            .range(["#aec7e8", "#f7b6d2"]);
-
-        d3.json("spetteguless.json", function(error, data) {
-            force_bezier
-                .color(class_scale)
-            d3.select("#bezier_graph")
-                .data([data])
-                .call(force_bezier);
-        });
-    </script>
 </body>
