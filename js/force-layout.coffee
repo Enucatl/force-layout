@@ -96,7 +96,7 @@ d3.chart.force_bezier = ->
             nodes = data.nodes.slice()
             links = []
             bilinks = []
-            data.links.forEach (link) ->
+            data.links.forEach (link, j) ->
                 s = nodes[link.source]
                 t = nodes[link.target]
                 i = {} # intermediate node
@@ -106,6 +106,7 @@ d3.chart.force_bezier = ->
                     {source: i, target: t}
                 )
                 bilink = [s, i, t]
+                bilink.index = j
                 bilink.type = link.type
                 bilinks.push bilink
 
@@ -131,6 +132,7 @@ d3.chart.force_bezier = ->
             link
                 .enter()
                 .append "path" 
+                .attr "id", (d) -> "link-#{d.index}"
                 .attr "class", (d) -> "link #{d.type}" 
 
             node = g.select ".nodes"
@@ -152,29 +154,25 @@ d3.chart.force_bezier = ->
                 .style "fill", (d) ->
                     color color_value d
                 .on "mouseover", (d) ->
-                    my_links = data.links.filter (e) ->
-                        e.source == d.index or e.target == d.index
-                    connected = my_links.map (e) ->
-                        if e.source == d.index
-                            return "#node-#{e.target}"
-                        else
-                            return "#node-#{e.source}"
-                    connected.push "#node-#{d.index}"
+                    connected = ["#node-#{d.index}"]
+                    for e in bilinks
+                        if e[0].index == d.index
+                            connected.push "#link-#{e.index}", "#node-#{e[2].index}"
+                        else if e[2].index == d.index
+                            connected.push "#link-#{e.index}", "#node-#{e[0].index}"
                     d3.selectAll connected.join()
                         .classed "active", true
                         .attr "filter", "url(#dropshadow)"
                 .on "mouseout", (d) ->
-                    my_links = data.links.filter (e) ->
-                        e.source == d.index or e.target == d.index
-                    connected = my_links.map (e) ->
-                        if e.source == d.index
-                            return "#node-#{e.target}"
-                        else
-                            return "#node-#{e.source}"
-                    connected.push "#node-#{d.index}"
+                    connected = ["#node-#{d.index}"]
+                    for e in bilinks
+                        if e[0].index == d.index
+                            connected.push "#link-#{e.index}", "#node-#{e[2].index}"
+                        else if e[2].index == d.index
+                            connected.push "#link-#{e.index}", "#node-#{e[0].index}"
                     d3.selectAll connected.join()
                         .classed "active", false
-                        .attr "filter", "url(#dropshadow)"
+                        .attr "filter", null
 
             node
                 .append "text"
