@@ -207,45 +207,54 @@ d3.chart.force_bezier = ->
                         else
                             "end"
 
-            color_legends = g.select "g.color_legends"
-                .selectAll "g.legend"
-                .data color.domain()
+            chart.update_color_legend = ->
+                node.selectAll "circle"
+                    .transition()
+                    .style "fill", (d) ->
+                        color color_value d
 
-            color_legends
-                .enter()
-                .append "g"
-                .classed "legend", true
+                color_legends = g.select "g.color_legends"
+                    .selectAll "g.legend"
+                    .data color.domain()
 
-            color_legends
-                .each (d) ->
-                    circles = d3.select this
-                        .selectAll "circle"
-                        .data [d]
-                    circles
-                        .enter()
-                        .append "circle"
-                        .attr "cx", width - 2 * circle_radius
-                        .attr "cy", 9
-                        .attr "r", circle_radius
-                    circles
-                        .style "fill", color
-                    texts = d3.select this
-                        .selectAll "text"
-                        .data [d]
-                    texts.enter()
-                        .append "text"
-                        .attr "x", width - 4 * circle_radius - 2
-                        .attr "y", 9
-                        .attr "dy", circle_radius
-                        .style "text-anchor", "end"
-                    texts
-                        .text (d) -> d
+                color_legends
+                    .enter()
+                    .append "g"
+                    .classed "legend", true
 
-            color_legends
-                .attr "transform", (d, i) ->
-                    "translate(0, #{(4 * circle_radius + 2) * i})"
+                color_legends
+                    .each (d) ->
+                        circles = d3.select this
+                            .selectAll "circle"
+                            .data [d]
+                        circles
+                            .enter()
+                            .append "circle"
+                            .attr "cx", width - 2 * circle_radius
+                            .attr "cy", 9
+                            .attr "r", circle_radius
+                        circles
+                            .transition()
+                            .style "fill", color
+                        texts = d3.select this
+                            .selectAll "text"
+                            .data [d]
+                        texts.enter()
+                            .append "text"
+                            .attr "x", width - 4 * circle_radius - 2
+                            .attr "y", 9
+                            .attr "dy", circle_radius
+                            .style "text-anchor", "end"
+                        texts
+                            .text (d) -> d
 
-            color_legends.exit().remove()
+                color_legends
+                    .attr "transform", (d, i) ->
+                        "translate(0, #{(4 * circle_radius + 2) * i})"
+
+                color_legends.exit().remove()
+
+            chart.update_color_legend()
 
             #get unique link types
             link_names = (l.type for l in bilinks).filter (d, i, self) ->
@@ -288,6 +297,7 @@ d3.chart.force_bezier = ->
                     "translate(0, #{offset + (4 * circle_radius + 2) * i})"
 
             link_legends.exit().remove()
+
 
 
     chart.width = (value) ->
