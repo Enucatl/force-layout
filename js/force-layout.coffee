@@ -27,12 +27,17 @@ d3.chart.force_bezier = ->
             t = nodes[link.target]
             i = {} # intermediate node
             nodes.push i
-            links.push
-            source: s
-            target: i
+            links.push [
+                {
+                    source: s
+                    target: i
+                }
             ,
-            source: i
-            target: t
+                {
+                    source: i
+                    target: t
+                }
+            ]
 
             bilinks.push [s, i, t]
             return
