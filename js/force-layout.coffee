@@ -74,7 +74,7 @@ d3.chart.force_bezier = ->
                 "M#{d[0].x}, #{d[0].y}S#{d[1].x}, #{d[1].y} #{d[2].x}, #{d[2].y}"
 
             node.attr "transform", (d) ->
-            "translate(#{d.x}, #{d.y})"
+                "translate(#{d.x}, #{d.y})"
 
             return
 
