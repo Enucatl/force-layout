@@ -9,10 +9,22 @@ d3.chart.force_bezier = ->
     height = width * 0.618
     color_value = (d) -> d.class
     color = d3.scale.category20()
-    link_distance = 40
+    link_distance = 20
     friction = 0.95
     link_strength = 1
     circle_radius = 5
+    link_legend = {
+        "broom": "passion"
+        "lemon": "lemon"
+    }
+    position_value = (d) -> d.gender
+
+    count_occurrences = (array, item, accessor=(d) -> d) ->
+        result = 0
+        for element in array
+            if accessor(element) == item
+                result++
+        return result
 
     chart = (selection) ->
         selection.each (data) ->
@@ -20,7 +32,8 @@ d3.chart.force_bezier = ->
                 .linkDistance link_distance 
                 .linkStrength link_strength 
                 .friction friction
-                .charge -60
+                .charge -70
+                .gravity 0
                 .size [width, height] 
 
             # select the svg if it exists
@@ -67,6 +80,16 @@ d3.chart.force_bezier = ->
                 bilink.type = link.type
                 bilinks.push bilink
 
+            nodes_with_occurrences = data.nodes.map (d, i) ->
+                d.counts = (
+                    count_occurrences(
+                        data.links, i, (e) -> e.target
+                    ) +
+                    count_occurrences(
+                        data.links, i, (e) -> e.source)
+                )
+                return d
+
             force
                 .nodes(nodes)
                 .links(links)
@@ -83,9 +106,8 @@ d3.chart.force_bezier = ->
 
             node = g.select ".nodes"
                 .selectAll ".node" 
-                .data data.nodes 
+                .data nodes_with_occurrences
 
-            console.log data.links
             node
                 .enter()
                 .append "g"
@@ -95,13 +117,13 @@ d3.chart.force_bezier = ->
             node
                 .append "circle" 
                 .attr "class", "node-circle" 
-                .attr "r", circle_radius 
+                .attr "r", (d) ->
+                    circle_radius + d.counts
                 .style "fill", (d) ->
                     color color_value d
 
             node
                 .append "text"
-                .attr "dx", circle_radius
                 .attr "dy", ".35em"
                 .text (d) -> d.name
 
@@ -112,13 +134,63 @@ d3.chart.force_bezier = ->
             node.exit().remove()
             link.exit().remove()
 
-            force.on "tick", ->
-                
+            #get unique position names
+            position_names = (position_value(l) for l in data.nodes).filter (d, i, self) ->
+                self.indexOf(d) == i
+
+            center = {
+                x: width / 2
+                y: height / 2
+            }
+
+            fixed_vertex = {
+                x: (1 - 0.618) * width / 2
+                y: height / 2
+            }
+
+            r = 0.618 * width / 2
+            n = position_names.length
+
+            vertices = {}
+            for d, i in position_names
+                if not i
+                    continue
+                vertices[d] = {
+                    x: center.x + r * Math.cos(2 * Math.PI * i / n)
+                    y: center.y + r * Math.sin(2 * Math.PI * i / n)
+                }
+            vertices[position_names[0]] = fixed_vertex
+
+            force.on "tick", (e) ->
+
+                k = 0.1 * e.alpha
+                nodes.forEach (o, i) ->
+                    o.y += k * (vertices[position_value(o)].y - o.y)
+                    o.x += k * (vertices[position_value(o)].x - o.x)
+
+                node
+                    .selectAll "circle"
+                    .attr "cx", (d) -> d.x
+                    .attr "cy", (d) -> d.y
+                                     
                 link.attr "d", (d) ->
                     "M#{d[0].x},#{d[0].y}S#{d[1].x},#{d[1].y} #{d[2].x},#{d[2].y}"
 
                 node.attr "transform", (d) ->
                     "translate(#{d.x}, #{d.y})"
+                node
+                    .selectAll "text"
+                    .transition()
+                    .attr "dx", (d) ->
+                        if d.x > width / 2
+                            circle_radius + d.counts
+                        else
+                            -circle_radius - d.counts
+                    .style "text-anchor", (d) ->
+                        if d.x > width / 2
+                            "start"
+                        else
+                            "end"
 
             color_legends = g.select "g.color_legends"
                 .selectAll "g.legend"
@@ -137,7 +209,7 @@ d3.chart.force_bezier = ->
                     circles
                         .enter()
                         .append "circle"
-                        .attr "cx", width - circle_radius
+                        .attr "cx", width - 2 * circle_radius
                         .attr "cy", 9
                         .attr "r", circle_radius
                     circles
@@ -147,7 +219,7 @@ d3.chart.force_bezier = ->
                         .data [d]
                     texts.enter()
                         .append "text"
-                        .attr "x", width - 2 * circle_radius - 2
+                        .attr "x", width - 4 * circle_radius - 2
                         .attr "y", 9
                         .attr "dy", circle_radius
                         .style "text-anchor", "end"
@@ -181,18 +253,19 @@ d3.chart.force_bezier = ->
                     links
                         .enter()
                         .append "path"
-                        .attr "d", "M#{width - 2 * circle_radius},#{2 * circle_radius}L#{width},#{2 * circle_radius}"
+                        .attr "d", "M#{width - 4 * circle_radius},9L#{width},9"
                         .attr "class", (d) -> "link #{d}" 
                     texts = d3.select this
-                        .selectAll "image"
+                        .selectAll "text"
                         .data [d]
                     texts.enter()
-                        .append "image"
-                        .attr "xlink:href", (d) -> "#{d}.png"
-                        .attr "x", width - 6 * circle_radius - 2
-                        .attr "y", 0
-                        .attr "width", 8 * circle_radius
-                        .attr "height", 8 * circle_radius
+                        .append "text"
+                        .attr "x", width - 4 * circle_radius - 2
+                        .attr "y", 9
+                        .attr "dy", circle_radius
+                        .style "text-anchor", "end"
+                    texts
+                        .text (d) -> link_legend[d]
 
             offset = 4 * circle_radius * color.domain().length + 4 * circle_radius
             link_legends
@@ -218,6 +291,12 @@ d3.chart.force_bezier = ->
         if not arguments.length
             return color
         color = value
+        chart
+
+    chart.position_value = (value) ->
+        if not arguments.length
+            return position_value
+        position_value = value
         chart
 
     chart.color_value = (value) ->
