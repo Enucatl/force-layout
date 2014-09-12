@@ -17,6 +17,7 @@ d3.chart.force_bezier = ->
         "broom": "passion"
         "lemon": "lemon"
     }
+    transition_lasts = 1000
 
     count_occurrences = (array, item, accessor=(d) -> d) ->
         result = 0
@@ -195,7 +196,7 @@ d3.chart.force_bezier = ->
                     "translate(#{d.x}, #{d.y})"
                 node
                     .selectAll "text"
-                    .transition()
+                    .transition(transition_lasts)
                     .attr "dx", (d) ->
                         if d.x > width / 2
                             circle_radius + d.counts
@@ -209,7 +210,7 @@ d3.chart.force_bezier = ->
 
             chart.update_color_legend = ->
                 node.selectAll "circle"
-                    .transition()
+                    .transition(transition_lasts)
                     .style "fill", (d) ->
                         color color_value d
 
