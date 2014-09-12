@@ -1,17 +1,18 @@
-.node {
+.node-circle {
     stroke: #fff;
     stroke-width: 1.5px;
 }
 
 .link {
     fill: none;
-    stroke: #bbb;
 }
 
 .lemon {
     stroke-width: 1;
+    stroke: #bbb;
 }
 
 .broom {
+    stroke: #bbb;
     stroke-width: 2;
 }

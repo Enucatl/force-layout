@@ -10,7 +10,7 @@
 <script src="js/force-layout.js"></script>
 <script type="text/javascript">
     var force_bezier = d3.chart.force_bezier();
-    d3.json("miserables.json", function(error, data) {
+    d3.json("spetteguless.json", function(error, data) {
         d3.select("#bezier_graph")
             .data([data])
             .call(force_bezier);

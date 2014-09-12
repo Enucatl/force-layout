@@ -9,8 +9,9 @@ d3.chart.force_bezier = ->
     height = width * 0.618
     color_value = (d) -> d.class
     color = d3.scale.category20()
-    link_distance = 10
-    link_strength = 2
+    link_distance = 40
+    friction = 0.95
+    link_strength = 1
     circle_radius = 5
 
     chart = (selection) ->
@@ -18,6 +19,8 @@ d3.chart.force_bezier = ->
             force = d3.layout.force()
                 .linkDistance link_distance 
                 .linkStrength link_strength 
+                .friction friction
+                .charge -60
                 .size [width, height] 
 
             # select the svg if it exists
@@ -82,14 +85,25 @@ d3.chart.force_bezier = ->
                 .selectAll ".node" 
                 .data data.nodes 
 
+            console.log data.links
             node
                 .enter()
-                .append "circle" 
+                .append "g"
                 .attr "class", "node" 
+                .call(force.drag)
+
+            node
+                .append "circle" 
+                .attr "class", "node-circle" 
                 .attr "r", circle_radius 
                 .style "fill", (d) ->
                     color color_value d
-                .call(force.drag)
+
+            node
+                .append "text"
+                .attr "dx", circle_radius
+                .attr "dy", ".35em"
+                .text (d) -> d.name
 
             node
                 .append "title" 
@@ -148,10 +162,7 @@ d3.chart.force_bezier = ->
 
             #get unique link types
             link_names = (l.type for l in bilinks).filter (d, i, self) ->
-                self.indexOf d == i
-
-            console.log (l.type for l in bilinks)
-            console.log link_names
+                self.indexOf(d) == i
 
             link_legends = g.select "g.link_legends"
                 .selectAll "g.legend"
@@ -170,22 +181,20 @@ d3.chart.force_bezier = ->
                     links
                         .enter()
                         .append "path"
-                        .attr "d", "M#{width - 2 * circle_radius},9L#{width},9"
+                        .attr "d", "M#{width - 2 * circle_radius},#{2 * circle_radius}L#{width},#{2 * circle_radius}"
                         .attr "class", (d) -> "link #{d}" 
                     texts = d3.select this
-                        .selectAll "text"
+                        .selectAll "image"
                         .data [d]
                     texts.enter()
-                        .append "text"
-                        .attr "x", width - 2 * circle_radius - 2
-                        .attr "y", 9
-                        .attr "dy", circle_radius
-                        .style "text-anchor", "end"
-                    texts
-                        .text (d) -> d
+                        .append "image"
+                        .attr "xlink:href", (d) -> "#{d}.png"
+                        .attr "x", width - 6 * circle_radius - 2
+                        .attr "y", 0
+                        .attr "width", 8 * circle_radius
+                        .attr "height", 8 * circle_radius
 
             offset = 4 * circle_radius * color.domain().length + 4 * circle_radius
-            console.log offset
             link_legends
                 .attr "transform", (d, i) ->
                     "translate(0, #{offset + (4 * circle_radius + 2) * i})"
