@@ -9,15 +9,14 @@ d3.chart.force_bezier = ->
     height = width * 0.618
     color_value = (d) -> d.class
     color = d3.scale.category20()
-    link_distance = width / 6
-    friction = 0.8
+    link_distance = 20
+    friction = 0.95
     link_strength = 1
     circle_radius = 5
     link_legend = {
         "broom": "passion"
         "lemon": "lemon"
     }
-    position_value = (d) -> d.gender
 
     count_occurrences = (array, item, accessor=(d) -> d) ->
         result = 0
@@ -33,7 +32,6 @@ d3.chart.force_bezier = ->
                 .linkStrength link_strength 
                 .friction friction
                 .charge -70
-                .gravity 0.02
                 .size [width, height] 
 
             # select the svg if it exists
@@ -134,35 +132,8 @@ d3.chart.force_bezier = ->
             node.exit().remove()
             link.exit().remove()
 
-            #get unique position names
-            position_names = (position_value(l) for l in data.nodes).filter (d, i, self) ->
-                self.indexOf(d) == i
-
-            center = {
-                x: width / 2
-                y: height / 2
-            }
-
-            r = 0.618 * width / 2
-            n = position_names.length
-
-            vertices = {}
-            for d, i in position_names
-                console.log i, n
-                vertices[d] = {
-                    x: center.x + r * Math.cos(2 * Math.PI * i / n)
-                    y: center.y + r * Math.sin(2 * Math.PI * i / n)
-                }
-
-            console.log vertices
-
-            force.on "tick", (e) ->
-
-                k = 0.1 * e.alpha
-                data.nodes.forEach (o, i) ->
-                    o.y += k * (vertices[position_value(o)].y - o.y)
-                    o.x += k * (vertices[position_value(o)].x - o.x)
-
+            force.on "tick", ->
+                
                 link.attr "d", (d) ->
                     "M#{d[0].x},#{d[0].y}S#{d[1].x},#{d[1].y} #{d[2].x},#{d[2].y}"
 
@@ -281,12 +252,6 @@ d3.chart.force_bezier = ->
         if not arguments.length
             return color
         color = value
-        chart
-
-    chart.position_value = (value) ->
-        if not arguments.length
-            return position_value
-        position_value = value
         chart
 
     chart.color_value = (value) ->
