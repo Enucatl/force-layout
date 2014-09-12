@@ -3,6 +3,10 @@ body {
     font-size: 90%;
 }
 
+svg {
+    overflow: visible;
+}
+
 .node-circle {
     stroke: #fff;
     stroke-width: 1.5px;
@@ -18,11 +22,11 @@ body {
 
 .lemon {
     stroke-width: 1;
-    stroke: #bbb;
+    stroke: #c7c7c7;
 }
 
 .broom {
-    stroke: #bbb;
+    stroke: #7f7f7f;
     stroke-width: 2;
 }
 

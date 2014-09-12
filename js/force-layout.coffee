@@ -6,7 +6,7 @@ if not d3.chart?
 
 d3.chart.force_bezier = ->
     width = 960
-    height = width * 0.618
+    height = width * 0.7
     color_value = (d) -> d.class
     color = d3.scale.category20()
     link_distance = 20
