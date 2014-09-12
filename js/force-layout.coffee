@@ -9,8 +9,8 @@ d3.chart.force_bezier = ->
     height = width * 0.618
     color_value = (d) -> d.class
     color = d3.scale.category20()
-    link_distance = 20
-    friction = 0.95
+    link_distance = width / 6
+    friction = 0.8
     link_strength = 1
     circle_radius = 5
     link_legend = {
@@ -33,7 +33,7 @@ d3.chart.force_bezier = ->
                 .linkStrength link_strength 
                 .friction friction
                 .charge -70
-                .gravity 0
+                .gravity 0.02
                 .size [width, height] 
 
             # select the svg if it exists
@@ -143,36 +143,26 @@ d3.chart.force_bezier = ->
                 y: height / 2
             }
 
-            fixed_vertex = {
-                x: (1 - 0.618) * width / 2
-                y: height / 2
-            }
-
             r = 0.618 * width / 2
             n = position_names.length
 
             vertices = {}
             for d, i in position_names
-                if not i
-                    continue
+                console.log i, n
                 vertices[d] = {
                     x: center.x + r * Math.cos(2 * Math.PI * i / n)
                     y: center.y + r * Math.sin(2 * Math.PI * i / n)
                 }
-            vertices[position_names[0]] = fixed_vertex
+
+            console.log vertices
 
             force.on "tick", (e) ->
 
                 k = 0.1 * e.alpha
-                nodes.forEach (o, i) ->
+                data.nodes.forEach (o, i) ->
                     o.y += k * (vertices[position_value(o)].y - o.y)
                     o.x += k * (vertices[position_value(o)].x - o.x)
 
-                node
-                    .selectAll "circle"
-                    .attr "cx", (d) -> d.x
-                    .attr "cy", (d) -> d.y
-                                     
                 link.attr "d", (d) ->
                     "M#{d[0].x},#{d[0].y}S#{d[1].x},#{d[1].y} #{d[2].x},#{d[2].y}"
 
