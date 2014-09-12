@@ -61,7 +61,11 @@
     {"name":"Federica","gender": "f", "class": "moral"},
     {"name":"Nucera","gender": "m", "class": "natural"},
     {"name":"Elena","gender": "f", "class": "moral"},
-    {"name":"Ricky DV","gender": "m", "class": "natural"}
+    {"name":"Ricky DV","gender": "m", "class": "natural"},
+    {"name":"Galliani","gender": "m", "class": "natural"},
+    {"name":"Giulia","gender": "f", "class": "moral"},
+    {"name":"Emanuela","gender": "f", "class": "moral"},
+    {"name":"Grandi","gender": "m", "class": "natural"}
   ],
   "links":[
     {"source":1,"target":0,"type": "broom"},
@@ -134,6 +138,9 @@
     {"source":54,"target":55,"type": "broom"},
     {"source":56,"target":57,"type": "broom"},
     {"source":58,"target":59,"type": "broom"},
+    {"source":63,"target":4,"type": "lemon"},
+    {"source":63,"target":62,"type": "broom"},
+    {"source":64,"target":65,"type": "broom"},
     {"source":60,"target":61,"type": "lemon"}
   ]
 }

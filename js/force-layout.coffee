@@ -44,6 +44,37 @@ d3.chart.force_bezier = ->
                 .append "svg"
                 .append "g"
 
+            defs = g_enter.append "defs"
+            filter = defs.append "filter"
+                .attr "id", "dropshadow"
+                .attr "x", "-50%"
+                .attr "y", "-50%"
+                .attr "height", "200%"
+                .attr "width", "200%"
+            filter.append 'feGaussianBlur' 
+                .attr 'in', 'SourceGraphic' 
+                .attr 'stdDeviation', 3  # !!! important parameter - blur
+                .attr 'result', 'blur'
+
+            # append offset filter to result of gaussion blur filter
+            filter.append 'feOffset' 
+                .attr 'in', 'blur'
+                .attr 'dx', 0  # !!! important parameter - x-offset
+                .attr 'dy', 0  # !!! important parameter - y-offset
+                .attr 'result', 'offsetBlur'
+
+            # merge result with original image
+            feMerge = filter.append 'feMerge'
+
+            # first layer result of blur and offset
+            feMerge.append 'feMergeNode' 
+                .attr 'in', 'offsetBlur'
+
+            # original image on top
+            feMerge.append 'feMergeNode'
+                .attr 'in', 'SourceGraphic'
+            # end filter stuff
+
             g_enter.append "g"
                 .classed "links", true
 
@@ -115,10 +146,35 @@ d3.chart.force_bezier = ->
             node
                 .append "circle" 
                 .attr "class", "node-circle" 
+                .attr "id", (d) -> "node-#{d.index}"
                 .attr "r", (d) ->
                     circle_radius + d.counts
                 .style "fill", (d) ->
                     color color_value d
+                .on "mouseover", (d) ->
+                    my_links = data.links.filter (e) ->
+                        e.source == d.index or e.target == d.index
+                    connected = my_links.map (e) ->
+                        if e.source == d.index
+                            return "#node-#{e.target}"
+                        else
+                            return "#node-#{e.source}"
+                    connected.push "#node-#{d.index}"
+                    d3.selectAll connected.join()
+                        .classed "active", true
+                        .attr "filter", "url(#dropshadow)"
+                .on "mouseout", (d) ->
+                    my_links = data.links.filter (e) ->
+                        e.source == d.index or e.target == d.index
+                    connected = my_links.map (e) ->
+                        if e.source == d.index
+                            return "#node-#{e.target}"
+                        else
+                            return "#node-#{e.source}"
+                    connected.push "#node-#{d.index}"
+                    d3.selectAll connected.join()
+                        .classed "active", false
+                        .attr "filter", "url(#dropshadow)"
 
             node
                 .append "text"
