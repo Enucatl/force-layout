@@ -44,7 +44,7 @@
     {"name":"Angela","gender": "f", "class": "moralisti"},
     {"name":"Baradel","gender": "m", "class": "moralisti"},
     {"name":"Ila","gender": "f", "class": "naturalisti"},
-    {"name":"Elisa A","gender": "f", "class": "moralisti"},
+    {"name":"Elisa Af","gender": "f", "class": "moralisti"},
     {"name":"Max B","gender": "m", "class": "moralisti"},
     {"name":"Carmelo","gender": "m", "class": "naturalisti"},
     {"name":"Bea","gender": "f", "class": "moralisti"},
@@ -65,7 +65,8 @@
     {"name":"Galliani","gender": "m", "class": "naturalisti"},
     {"name":"Giulia","gender": "f", "class": "moralisti"},
     {"name":"Emanuela","gender": "f", "class": "moralisti"},
-    {"name":"Grandi","gender": "m", "class": "naturalisti"}
+    {"name":"Grandi","gender": "m", "class": "naturalisti"},
+    {"name":"Elisa An","gender": "f", "class": "moralisti"}
   ],
   "links":[
     {"source":1,"target":0,"type": "passion"},
@@ -129,7 +130,7 @@
     {"source":28,"target":26,"type": "lemon"},
     {"source":23,"target":43,"type": "passion"},
     {"source":44,"target":45,"type": "passion"},
-    {"source":44,"target":46,"type": "passion"},
+    {"source":46,"target":66,"type": "passion"},
     {"source":44,"target":8,"type": "lemon"},
     {"source":47,"target":48,"type": "passion"},
     {"source":47,"target":49,"type": "passion"},
