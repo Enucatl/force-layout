@@ -13,10 +13,6 @@ d3.chart.force_bezier = ->
     friction = 0.95
     link_strength = 1
     circle_radius = 5
-    link_legend = {
-        "broom": "passion"
-        "lemon": "lemon"
-    }
     transition_lasts = 1000
 
     count_occurrences = (array, item, accessor=(d) -> d) ->
@@ -231,6 +227,7 @@ d3.chart.force_bezier = ->
                         circles
                             .enter()
                             .append "circle"
+                            .classed "node-circle", true
                             .attr "cx", width - 2 * circle_radius
                             .attr "cy", 9
                             .attr "r", circle_radius
@@ -272,6 +269,7 @@ d3.chart.force_bezier = ->
 
             link_legends
                 .each (d) ->
+                    console.log d
                     links = d3.select this
                         .selectAll "path"
                         .data [d]
@@ -290,7 +288,7 @@ d3.chart.force_bezier = ->
                         .attr "dy", circle_radius
                         .style "text-anchor", "end"
                     texts
-                        .text (d) -> link_legend[d]
+                        .text (d) -> d
 
             offset = 4 * circle_radius * color.domain().length + 4 * circle_radius
             link_legends

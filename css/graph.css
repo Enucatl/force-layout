@@ -1,15 +1,14 @@
-body {
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 90%;
-}
-
 svg {
     overflow: visible;
 }
 
+svg text {
+    fill: white;
+}
+
 .node-circle {
     stroke: #fff;
-    stroke-width: 1.5px;
+    stroke-width: 1px;
 }
 
 .node-circle.active {
@@ -22,12 +21,12 @@ svg {
 
 .lemon {
     stroke-width: 1;
-    stroke: #c7c7c7;
+    stroke: #969696;
 }
 
-.broom {
-    stroke: #7f7f7f;
+.passion {
     stroke-width: 2;
+    stroke: #d9d9d9;
 }
 
 .link.active {
