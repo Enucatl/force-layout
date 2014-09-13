@@ -84,6 +84,9 @@ d3.chart.force_bezier = ->
             g_enter.append "g"
                 .classed "link_legends", true
 
+            g_enter.append "g"
+                .classed "size_legends", true
+
             svg
                 .attr "width", width 
                 .attr "height", height 
@@ -107,14 +110,15 @@ d3.chart.force_bezier = ->
                 bilink.type = link.type
                 bilinks.push bilink
 
+            passion_links = data.links.filter (d) -> d.type == "passion"
             nodes_with_occurrences = data.nodes.map (d, i) ->
                 d.counts = (
                     count_occurrences(
-                        data.links, i, (e) -> e.target
+                        passion_links, i, (e) -> e.target
                     ) +
                     count_occurrences(
-                        data.links, i, (e) -> e.source)
-                )
+                        passion_links, i, (e) -> e.source)
+                ) - 1
                 return d
 
             force
@@ -269,7 +273,6 @@ d3.chart.force_bezier = ->
 
             link_legends
                 .each (d) ->
-                    console.log d
                     links = d3.select this
                         .selectAll "path"
                         .data [d]
@@ -296,6 +299,21 @@ d3.chart.force_bezier = ->
                     "translate(0, #{offset + (4 * circle_radius + 2) * i})"
 
             link_legends.exit().remove()
+
+            size_legends = g.select "g.size_legends"
+                .selectAll "text"
+                .data ["r = #passion"]
+
+            size_legends
+                .enter()
+                .append "text"
+                .attr "x", width
+                .attr "y", 9 + 2 * offset
+                .attr "dy", circle_radius
+                .style "text-anchor", "end"
+                .text (d) -> d
+
+            size_legends.exit().remove()
 
 
 
