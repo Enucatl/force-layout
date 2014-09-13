@@ -110,7 +110,7 @@
     {"source":11,"target":13,"type": "lemon"},
     {"source":11,"target":27,"type": "lemon"},
     {"source":11,"target":29,"type": "lemon"},
-    {"source":11,"target":17,"type": "passion"},
+    {"source":11,"target":12,"type": "passion"},
     {"source":11,"target":30,"type": "passion"},
     {"source":11,"target":31,"type": "passion"},
     {"source":11,"target":32,"type": "passion"},
