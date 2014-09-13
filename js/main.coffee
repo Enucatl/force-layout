@@ -25,7 +25,8 @@ $ ->
 
     d3.json "spetteguless.json", (error, data) ->
         force_bezier
-            .color class_scale 
+            .color_value scale_values["gender"]
+            .color gender_scale 
         d3.select "#bezier_graph" 
             .data [data] 
             .call force_bezier 
