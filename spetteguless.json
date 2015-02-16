@@ -65,7 +65,10 @@
     {"name":"Giulia","gender": "f", "class": "moralisti"},
     {"name":"Emanuela","gender": "f", "class": "moralisti"},
     {"name":"Grandi","gender": "m", "class": "naturalisti"},
-    {"name":"Elisa Af","gender": "f", "class": "moralisti"}
+    {"name":"Elisa Af","gender": "f", "class": "moralisti"},
+    {"name":"Dung","gender": "f", "class": "moralisti"},
+    {"name":"Yiwei","gender": "m", "class": "naturalisti"},
+    {"name":"Oegia","gender": "m", "class": "naturalisti"}
   ],
   "links":[
     {"source":1,"target":0,"type": "passion"},
@@ -141,6 +144,8 @@
     {"source":62,"target":61,"type": "passion"},
     {"source":63,"target":64,"type": "passion"},
     {"source":59,"target":60,"type": "lemon"},
+    {"source":66,"target":67,"type": "passion"},
+    {"source":68,"target":53,"type": "lemon"},
     {"source":4,"target":65,"type": "passion"}
   ]
 }
