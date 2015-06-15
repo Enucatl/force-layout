@@ -23,13 +23,22 @@ $ ->
         gender: (d) -> d.gender
     }
 
-    d3.json "spetteguless.json", (error, data) ->
-        force_bezier
-            .color_value scale_values["gender"]
-            .color gender_scale 
-        d3.select "#bezier_graph" 
-            .data [data] 
-            .call force_bezier 
+    d3.csv "nodes.csv", (error, nodes) ->
+        d3.csv "links.csv", (link) ->
+                source: parseInt link.source
+                target: parseInt link.target
+                type: link.type
+            , (error, links) ->
+                data = {
+                    "nodes": nodes
+                    "links": links
+                }
+                force_bezier
+                    .color_value scale_values["gender"]
+                    .color gender_scale 
+                d3.select "#bezier_graph" 
+                    .data [data] 
+                    .call force_bezier 
 
     $('#scale-selector button').click ->
         $(this).addClass 'active'
