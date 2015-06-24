@@ -6,7 +6,7 @@ $ ->
 
     class_scale = d3.scale.ordinal()
         .domain ["naturalisti", "moralisti", "socialisti"] 
-        .range ["#4daf4a", "#377eb8", "#e41a1c"] 
+        .range ["#4daf4a", "#377eb8", "#fb8072"] 
 
     gender_scale = d3.scale.ordinal()
         .domain ["m", "f"] 

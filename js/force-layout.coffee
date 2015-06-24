@@ -293,7 +293,7 @@ d3.chart.force_bezier = ->
                     texts
                         .text (d) -> d
 
-            offset = 4 * circle_radius * color.domain().length + 4 * circle_radius
+            offset = 4 * circle_radius * (color.domain().length + 1) + 4 * circle_radius
             link_legends
                 .attr "transform", (d, i) ->
                     "translate(0, #{offset + (4 * circle_radius + 2) * i})"
