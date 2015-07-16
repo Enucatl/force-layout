@@ -5,9 +5,8 @@ $ ->
     force_bezier = d3.chart.force_bezier()
 
     class_scale = d3.scale.ordinal()
-        .domain ["naturalisti", "moralisti"] 
-        #.range ["#a1d99b", "#aec7e8"] 
-        .range ["#31a354", "#3182bd"] 
+        .domain ["naturalisti", "moralisti", "socialisti"] 
+        .range ["#4daf4a", "#377eb8", "#fb8072"] 
 
     gender_scale = d3.scale.ordinal()
         .domain ["m", "f"] 
